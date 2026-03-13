@@ -1,0 +1,8 @@
+PlayerName: имя
+MaxLevel: 5
+Score: 15
+---
+PlayerName: vor
+MaxLevel: 10
+Score: 8
+---
