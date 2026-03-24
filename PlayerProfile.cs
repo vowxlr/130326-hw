@@ -23,9 +23,9 @@ namespace _120326_hw
         }
         public void ChangeMaxLevel(int newlvl)
         {
-            if(newlvl > MaxLevel)
+            if (newlvl == MaxLevel && (newlvl != 5))
             {
-                MaxLevel = newlvl;
+                MaxLevel++;
             }
         }
         public void AddScore(int exp)

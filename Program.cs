@@ -11,47 +11,26 @@ namespace _120326_hw
     {
         static void Main(string[] args)
         {
-            int playerExp = 0;
-            int playerLvl = 1;
-            int playerExpMult = 0;
-
-            string path = (@"D:\Ьеь\c#\120326 hw\120326 hw\players.txt");
+            int playerExpMult = 10;
 
             Console.Write("Введите имя игрока:");
             string name = Console.ReadLine().Trim();
 
-            PlayerProfile Player = new PlayerProfile(name, 1, 0);
+            List<PlayerProfile> allPlayers = SaveSystem.LoadAllPlayers();
+            PlayerProfile currentPlayer = allPlayers.FirstOrDefault(p => p.Playername == name);
 
-            LvlSystem playerLvlSystem = new LvlSystem(playerExp, playerLvl, playerExpMult);
-            string loadContent = SaveSystem.Load().Trim();
 
-            string text = File.ReadAllText(path);
-            string[] blocks = text.Split(new[] { "---" }, StringSplitOptions.RemoveEmptyEntries);
-
-            List<string> lines = new List<string>();
-            foreach (string block in blocks)
+            if (currentPlayer == null)
             {
-                string[] l = block.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach(string line in l)
-                {
-                    lines.Add(line);
-                }
+                currentPlayer = new PlayerProfile(name, 1, 0);
+                allPlayers.Add(currentPlayer);
+                SaveSystem.SaveAllPlayers(allPlayers);
+                Console.WriteLine($"Создан новый игрок: {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
             }
-
-            for (int i = 0; i< lines.Count; i+=3)
+            else
             {
-                if(lines[i] == $"PlayerName: {name}")
-                {
-                    playerLvlSystem.LoadData(int.Parse(lines[i + 1].Split()[1]), int.Parse(lines[i + 2].Split()[1]));
-                    break;
-                }
-                else
-                {
-                    SaveNewInfo(Player);
-                }
+                Console.WriteLine($"Игрок {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
             }
-
-            Console.WriteLine(loadContent);
 
             GameLevel Lvl1 = new GameLevel(1, 1, 10);
             GameLevel Lvl2 = new GameLevel(2, 1, 50);
@@ -59,9 +38,8 @@ namespace _120326_hw
             GameLevel Lvl4 = new GameLevel(4, 1, 250);
             GameLevel Lvl5 = new GameLevel(5, 1, 1000);
 
-
             bool flag = true;
-            while(flag)
+            while (flag)
             {
                 Console.WriteLine("---------------------");
                 Console.WriteLine("#Выберите действие:");
@@ -76,65 +54,63 @@ namespace _120326_hw
                     Console.WriteLine("#Выберите уровень для прохождения:");
                     Console.WriteLine("[1]    [2]    [3]    [4]    [5]");
                     Console.WriteLine("---------------------");
-                    int lvl = IsIntForLvl(Player.Maxlevel);
+                    int lvl = IsIntForLvl(currentPlayer.Maxlevel);
                     switch (lvl)
                     {
                         case 1:
                             {
                                 Lvl1.Game();
-                                playerLvlSystem.AddExp(lvl * lvl * 10);
-                                Player.AddScore(lvl * lvl * 10);
-                                Player.ChangeMaxLevel(lvl);
-                                SaveNewInfo(Player);
-                                Console.WriteLine($"Текущие данные: Игрок {Player.Playername}, Макс. уровень {Player.Maxlevel}, Счёт {Player.SCore}.");
+                                currentPlayer.AddScore(lvl * lvl * playerExpMult);
+                                currentPlayer.ChangeMaxLevel(lvl);
+                                SaveSystem.SaveAllPlayers(allPlayers);
+                                Console.WriteLine($"Текущие данные: Игрок {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
                                 break;
                             }
                         case 2:
                             {
                                 Lvl2.Game();
-                                playerLvlSystem.AddExp(lvl * lvl * 10);
-                                Player.AddScore(lvl * lvl * 10);
-                                Player.ChangeMaxLevel(lvl);
-                                SaveNewInfo(Player);
-                                Console.WriteLine($"Текущие данные: Игрок {Player.Playername}, Макс. уровень {Player.Maxlevel}, Счёт {Player.SCore}.");
+                                currentPlayer.AddScore(lvl * lvl * playerExpMult);
+                                currentPlayer.ChangeMaxLevel(lvl);
+                                SaveSystem.SaveAllPlayers(allPlayers);
+                                Console.WriteLine($"Текущие данные: Игрок {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
                                 break;
                             }
                         case 3:
                             {
                                 Lvl3.Game();
-                                playerLvlSystem.AddExp(lvl * lvl * 10);
-                                Player.AddScore(lvl * lvl * 10);
-                                Player.ChangeMaxLevel(lvl);
-                                SaveNewInfo(Player);
-                                Console.WriteLine($"Текущие данные: Игрок {Player.Playername}, Макс. уровень {Player.Maxlevel}, Счёт {Player.SCore}.");
+                                currentPlayer.AddScore(lvl * lvl * playerExpMult);
+                                currentPlayer.ChangeMaxLevel(lvl);
+                                SaveSystem.SaveAllPlayers(allPlayers);
+                                Console.WriteLine($"Текущие данные: Игрок {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
                                 break;
                             }
                         case 4:
                             {
                                 Lvl4.Game();
-                                playerLvlSystem.AddExp(lvl * lvl * 10);
-                                Player.AddScore(lvl * lvl * 10);
-                                Player.ChangeMaxLevel(lvl);
-                                SaveNewInfo(Player);
-                                Console.WriteLine($"Текущие данные: Игрок {Player.Playername}, Макс. уровень {Player.Maxlevel}, Счёт {Player.SCore}.");
+                                currentPlayer.AddScore(lvl * lvl * playerExpMult);
+                                currentPlayer.ChangeMaxLevel(lvl);
+                                SaveSystem.SaveAllPlayers(allPlayers);
+                                Console.WriteLine($"Текущие данные: Игрок {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
                                 break;
                             }
                         case 5:
                             {
                                 Lvl5.Game();
-                                playerLvlSystem.AddExp(lvl * lvl * 10);
-                                Player.AddScore(lvl * lvl * 10);
-                                Player.ChangeMaxLevel(lvl);
-                                SaveNewInfo(Player);
-                                Console.WriteLine($"Текущие данные: Игрок {Player.Playername}, Макс. уровень {Player.Maxlevel}, Счёт {Player.SCore}.");
+                                currentPlayer.AddScore(lvl * lvl * playerExpMult);
+                                currentPlayer.ChangeMaxLevel(lvl);
+                                SaveSystem.SaveAllPlayers(allPlayers);
+                                Console.WriteLine($"Текущие данные: Игрок {currentPlayer.Playername}, Макс. уровень {currentPlayer.Maxlevel}, Счёт {currentPlayer.SCore}.");
                                 break;
                             }
 
                     }
                 }
-                else if((userChoice == 2))
+                else if ((userChoice == 2))
                 {
                     flag = false;
+                    List<PlayerProfile> leaderBoard = LeaderBoard.SortLeaderBoard(allPlayers);
+                    LeaderBoard.ShowLeaderBoard(leaderBoard);
+                    SaveSystem.SaveAllPlayers(allPlayers);
                 }
                 else
                 {
@@ -142,19 +118,12 @@ namespace _120326_hw
                 }
             }
         }
-        public static void SaveNewInfo(PlayerProfile Player)
-        {
-            SaveSystem.Save($"PlayerName: {Player.Playername}");
-            SaveSystem.Save($"MaxLevel: {Player.Maxlevel}");
-            SaveSystem.Save($"Score: {Player.SCore}");
-            SaveSystem.Save("---");
-        }
         public static int IsInt()
         {
-            while(true)
+            while (true)
             {
                 string n = Console.ReadLine().Trim();
-                if(int.TryParse(n, out int newn))
+                if (int.TryParse(n, out int newn))
                 {
                     return newn;
                 }
@@ -169,7 +138,7 @@ namespace _120326_hw
                 {
                     return newn;
                 }
-                else if(int.Parse(n) > maxLvl)
+                else if (int.Parse(n) > maxLvl)
                 {
                     Console.WriteLine("Этот уровень еще не открыт");
                 }
